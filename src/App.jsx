@@ -7,7 +7,6 @@ import {
   ChevronLeft, 
   ArrowRight, 
   RefreshCw, 
-  Info, 
   ArrowLeft, 
   LayoutGrid, 
   Tablet, 
@@ -20,23 +19,20 @@ import {
 } from 'lucide-react';
 
 const App = () => {
-  // Navigation et États de vue
+  // --- ÉTATS ---
   const [currentPage, setCurrentPage] = useState('home'); 
   const [viewType, setViewType] = useState('immersive'); 
   const [selectedProductIndex, setSelectedProductIndex] = useState(0);
   const [viewSide, setViewSide] = useState('back'); 
   const [selectedVariable, setSelectedVariable] = useState(0);
-  
-  // États UI
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isManifestoFlipped, setIsManifestoFlipped] = useState(false);
   const [isConfigExpanded, setIsConfigExpanded] = useState(true);
-  
-  // États Commerce
   const [cart, setCart] = useState([]);
   const [isCartModalOpen, setIsCartModalOpen] = useState(false);
 
-  // Source de l'image (À remplacer par ton lien Cloudinary)
+  // --- CONFIGURATION ---
+  // Remarque : Si ton image est dans le dossier 'public', utilise "/image.png"
   const userImageUrl = "image.png";
 
   const collections = [
@@ -76,7 +72,7 @@ const App = () => {
 
   const currentProduct = collections[selectedProductIndex];
 
-  // --- LOGIQUE PANIER ---
+  // --- ACTIONS ---
   const addToCart = () => {
     const item = {
       ...currentProduct,
@@ -93,7 +89,6 @@ const App = () => {
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
 
-  // --- LOGIQUE SLIDER ---
   const nextSlide = () => {
     setSelectedProductIndex((prev) => (prev + 1) % collections.length);
     setViewSide('back');
@@ -106,50 +101,47 @@ const App = () => {
     setSelectedVariable(0);
   };
 
-  // --- COMPOSANTS INTERNES ---
-  const Navigation = () => (
-    <nav className="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 md:px-12 bg-white/90 backdrop-blur-md border-b border-gray-100">
-      <div className="flex items-center gap-8">
-        <Menu className="w-6 h-6 cursor-pointer md:hidden" onClick={() => setIsMenuOpen(true)} />
-        <div className="hidden md:flex gap-8 text-[10px] font-bold tracking-[0.3em] uppercase text-gray-400">
-          <button 
-            onClick={() => { setCurrentPage('collections'); setViewType('immersive'); }} 
-            className={`hover:text-[#0a9396] transition-colors ${currentPage === 'collections' ? 'text-[#0a9396]' : ''}`}
-          >
-            Collections
-          </button>
-          <button 
-            onClick={() => setCurrentPage('histoire')} 
-            className={`hover:text-[#0a9396] transition-colors ${currentPage === 'histoire' ? 'text-[#0a9396]' : ''}`}
-          >
-            Histoire
-          </button>
-        </div>
-      </div>
-
-      <div className="text-3xl md:text-4xl tracking-tighter cursor-pointer" style={{ fontFamily: 'serif', fontWeight: '900' }} onClick={() => setCurrentPage('home')}>
-        KΛVΛH
-      </div>
-
-      <div className="flex items-center gap-6">
-        <div className="hidden lg:block text-[9px] tracking-[0.4em] font-medium text-gray-300 uppercase">
-          PORTE TON INTENTION
-        </div>
-        <div className="relative cursor-pointer p-2 hover:bg-gray-50 rounded-full transition-colors" onClick={() => setCurrentPage('cart')}>
-            <ShoppingBag className={`w-5 h-5 ${currentPage === 'cart' ? 'text-[#0a9396]' : ''}`} />
-            {cart.length > 0 && (
-              <span className="absolute top-0 right-0 bg-[#0a9396] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-bounce">
-                {cart.length}
-              </span>
-            )}
-        </div>
-      </div>
-    </nav>
-  );
-
   return (
     <div className="min-h-screen bg-[#FDFCF8] text-[#1a1a1a] font-sans overflow-x-hidden">
-      <Navigation />
+      
+      {/* NAVIGATION (Intégrée directement pour éviter les erreurs de build) */}
+      <nav className="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 md:px-12 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div className="flex items-center gap-8">
+          <Menu className="w-6 h-6 cursor-pointer md:hidden" onClick={() => setIsMenuOpen(true)} />
+          <div className="hidden md:flex gap-8 text-[10px] font-bold tracking-[0.3em] uppercase text-gray-400">
+            <button 
+              onClick={() => { setCurrentPage('collections'); setViewType('immersive'); }} 
+              className={`hover:text-[#0a9396] transition-colors ${currentPage === 'collections' ? 'text-[#0a9396]' : ''}`}
+            >
+              Collections
+            </button>
+            <button 
+              onClick={() => setCurrentPage('histoire')} 
+              className={`hover:text-[#0a9396] transition-colors ${currentPage === 'histoire' ? 'text-[#0a9396]' : ''}`}
+            >
+              Histoire
+            </button>
+          </div>
+        </div>
+
+        <div className="text-3xl md:text-4xl tracking-tighter cursor-pointer" style={{ fontFamily: 'serif', fontWeight: '900' }} onClick={() => setCurrentPage('home')}>
+          KΛVΛH
+        </div>
+
+        <div className="flex items-center gap-6">
+          <div className="hidden lg:block text-[9px] tracking-[0.4em] font-medium text-gray-300 uppercase">
+            PORTE TON INTENTION
+          </div>
+          <div className="relative cursor-pointer p-2 hover:bg-gray-50 rounded-full transition-colors" onClick={() => setCurrentPage('cart')}>
+              <ShoppingBag className={`w-5 h-5 ${currentPage === 'cart' ? 'text-[#0a9396]' : ''}`} />
+              {cart.length > 0 && (
+                <span className="absolute top-0 right-0 bg-[#0a9396] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-bounce">
+                  {cart.length}
+                </span>
+              )}
+          </div>
+        </div>
+      </nav>
 
       {/* MODAL NOTIFICATION PANIER */}
       {isCartModalOpen && (
@@ -234,13 +226,13 @@ const App = () => {
                 </div>
 
                 <div className="space-y-8 text-center lg:text-left">
-                  <div className="space-y-4">
-                    <h2 className="text-6xl md:text-8xl font-light tracking-tighter leading-none text-center lg:text-left">{currentProduct.title}</h2>
-                    <p className="text-gray-400 text-sm font-light italic leading-relaxed max-w-sm mx-auto lg:mx-0 text-center lg:text-left">{currentProduct.description}</p>
+                  <div className="space-y-4 text-center lg:text-left">
+                    <h2 className="text-6xl md:text-8xl font-light tracking-tighter leading-none">{currentProduct.title}</h2>
+                    <p className="text-gray-400 text-sm font-light italic leading-relaxed max-w-sm mx-auto lg:mx-0">{currentProduct.description}</p>
                   </div>
                   
                   <div className="space-y-4 text-center lg:text-left">
-                    <p className="text-[9px] font-bold tracking-widest uppercase text-gray-400 text-center lg:text-left">Variante d'Intention :</p>
+                    <p className="text-[9px] font-bold tracking-widest uppercase text-gray-400">Variante d'Intention :</p>
                     <div className="flex gap-4 justify-center lg:justify-start">
                       {currentProduct.variables.map((v, idx) => (
                         <button
@@ -310,7 +302,7 @@ const App = () => {
                     </p>
                   </div>
 
-                  <div className="absolute inset-0 backface-hidden bg-[#1a1a1a] rounded-[2.5rem] flex flex-col items-center justify-center p-12 transform rotate-y-180 text-white overflow-hidden">
+                  <div className="absolute inset-0 backface-hidden bg-[#1a1a1a] rounded-[2.5rem] flex flex-col items-center justify-center p-12 transform rotate-y-180 text-white overflow-hidden text-center">
                     <div className="absolute top-0 right-0 p-12 text-6xl font-serif opacity-5 select-none">כ</div>
                     <h4 className="text-2xl font-bold tracking-[0.3em] mb-6 border-b border-white/10 pb-4 uppercase text-[#0a9396] text-center">Viser le Cœur</h4>
                     <div className="max-w-xl space-y-6 text-center leading-relaxed font-light text-sm md:text-base mx-auto">
@@ -337,13 +329,13 @@ const App = () => {
             <p className="text-gray-400 text-sm tracking-widest uppercase italic font-bold">Votre sélection d'intentions</p>
           </div>
           {cart.length === 0 ? (
-            <div className="py-20 text-center space-y-8 animate-fade-in">
+            <div className="py-20 text-center space-y-8 animate-fade-in text-center">
               <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto"><ShoppingBag className="w-10 h-10 text-gray-200" /></div>
               <p className="text-gray-400 italic">Votre panier est encore vide d'intention.</p>
               <button onClick={() => setCurrentPage('collections')} className="bg-[#1a1a1a] text-white px-10 py-4 rounded-sm text-[10px] font-bold uppercase tracking-widest shadow-xl">Commencer mes achats</button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 animate-fade-in">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 animate-fade-in text-center lg:text-left">
               <div className="lg:col-span-2 space-y-6">
                 {cart.map((item) => (
                   <div key={item.cartId} className="flex gap-6 p-6 bg-white rounded-3xl border border-gray-50 group hover:shadow-lg transition-all text-center lg:text-left">
@@ -377,19 +369,30 @@ const App = () => {
 
       {/* --- FOOTER --- */}
       <footer className="py-24 px-6 border-t border-gray-100 bg-white text-center">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center">
           <div className="space-y-2">
             <div className="text-4xl font-serif font-black tracking-tighter">KΛVΛH</div>
-            <p className="text-[9px] text-gray-400 tracking-[0.5em] uppercase italic">Porte ton Intention</p>
+            <p className="text-[9px] text-gray-400 tracking-[0.5em] uppercase italic text-center">Porte ton Intention</p>
           </div>
-          <div className="flex gap-12 text-[10px] font-bold tracking-widest text-gray-400 uppercase justify-center">
+          <div className="flex gap-12 text-[10px] font-bold tracking-widest text-gray-400 uppercase text-center justify-center">
             <a href="#" className="hover:text-[#0a9396]">Instagram</a>
             <a href="#" className="hover:text-[#0a9396]">TikTok</a>
             <a href="#" className="hover:text-[#0a9396]">Contact</a>
           </div>
-          <div className="text-[9px] text-gray-300 tracking-[0.4em] uppercase font-bold italic">© KAVAH Brand.</div>
+          <div className="text-[9px] text-gray-300 tracking-[0.4em] uppercase font-bold italic text-center">© KAVAH Brand.</div>
         </div>
       </footer>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center p-8 animate-fade-in text-center">
+          <X className="absolute top-6 right-6 w-8 h-8 cursor-pointer" onClick={() => setIsMenuOpen(false)} />
+          <div className="flex flex-col items-center gap-10 text-4xl font-light tracking-tighter">
+            <button onClick={() => { setCurrentPage('collections'); setViewType('immersive'); setIsMenuOpen(false); }}>Shop</button>
+            <button onClick={() => { setCurrentPage('histoire'); setIsMenuOpen(false); }}>Histoire</button>
+          </div>
+        </div>
+      )}
 
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@200;300;400;500;700;900&display=swap');
